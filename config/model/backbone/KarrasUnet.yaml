@@ -1,0 +1,11 @@
+
+name: KarrasUnet
+params:
+  channels: 2
+  dim: 4
+  dim_max: 8
+  attn_dim_head: 4
+  conditioning_channels: 3
+  input_size:
+    - 720
+    - 1440

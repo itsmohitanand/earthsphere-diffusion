@@ -1,0 +1,18 @@
+split:
+  #Inclusive years
+  train:
+    - 1993
+    - 2017
+  val:
+    - 2018
+    - 2018
+  test:
+    - 2019
+    - 2023
+dynamic_variables:
+  - 10m_u_component_of_wind
+  - 10m_v_component_of_wind
+batch_size: 4
+scaler:
+  name: NormScaler
+  filename: scale_params.zarr

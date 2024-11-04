@@ -1,0 +1,14 @@
+# Must in the yaml file
+Mohit:
+  path:
+    root: /home/mila/m/mohit.anand/scratch/earthsphere
+    data:
+      folder: HighResWindSpeed
+      train_file: 10m_wind_train_time_chunk_1.zarr
+      test_file: 10m_wind_test_time_chunk_1.zarr
+  experiment:
+    dataset: HighResWindSpeed
+    model:
+      backbone: KarrasUnet
+      diffusion: ElucidateDiffusion
+

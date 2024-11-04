@@ -1,0 +1,15 @@
+name: ElucidateDiffusion
+optimizer:
+  params:
+    name: Adam
+    lr: 3e-3
+    T_max: 200000
+    eta_min: 3e-5
+model:
+  params:
+    num_sample_steps: 32
+    self_conditioning: false
+loss_mask: null
+latitude_weight: null
+variable_weight: null
+
