@@ -3,7 +3,7 @@ optimizer:
   params:
     name: Adam
     lr: 3e-3
-    T_max: 200000
+    T_max: 500000
     eta_min: 3e-5
 model:
   params:

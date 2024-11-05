@@ -32,9 +32,16 @@ wandb_logger = WandbLogger(project=wandb_project, entity=wandb_entity, experimen
 
 lr_monitor = LearningRateMonitor(logging_interval='step')
 
-strategy = DDPStrategy(find_unused_parameters=True)
+strategy = DDPStrategy()
 
-trainer = Trainer(accelerator="gpu", logger=wandb_logger, callbacks=[lr_monitor],devices=8, strategy=strategy, num_nodes=1,default_root_dir="/home/mila/m/mohit.anand/scratch/earthsphere/lightning")
+trainer = Trainer(accelerator="gpu", 
+                logger=wandb_logger, 
+                callbacks=[lr_monitor],
+                devices=8, 
+                strategy=strategy, 
+                num_nodes=1, 
+                default_root_dir="/home/mila/m/mohit.anand/scratch/earthsphere/lightning",
+                precision=16)
 if trainer.global_rank == 0:
     wandb_logger.experiment.config.update(config.toDict())
 trainer.fit(model=diffusion, datamodule=dl)

@@ -2,12 +2,12 @@
 #SBATCH --job-name=hrws_diffusion
 #SBATCH --output=%x_%j_out.txt
 #SBATCH --error=%x_%j_err.txt
-# Not now SBATCH --gpus=a100:1
+# NOT SBATCH --gpus=a100:8
 #SBATCH --gpus=8
 #SBATCH --cpus-per-task=2
 #SBATCH --ntasks-per-node=8
 #SBATCH --nodes=1
-#SBATCH --mem=16G
+#SBATCH --mem=32G
 #SBATCH --time=23:15:00
 
 

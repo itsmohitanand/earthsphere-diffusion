@@ -52,7 +52,7 @@ class HighResWindSpeed(L.LightningDataModule):
                 var_list = self.cfg.experiment.dataset.dynamic_variables
                 )
         
-        return DataLoader(dataset, batch_size=self.batch_size)
+        return DataLoader(dataset, batch_size=self.batch_size, num_workers=2)
 
     def val_dataloader(self):
         train_data = zarr.open(self.cfg.path.root / self.cfg.path.data.folder / self.cfg.path.data.train_file)
@@ -68,7 +68,7 @@ class HighResWindSpeed(L.LightningDataModule):
                 var_list = self.cfg.experiment.dataset.dynamic_variables
                 )
         
-        return DataLoader(dataset, batch_size=self.batch_size)
+        return DataLoader(dataset, batch_size=self.batch_size, num_workers=2)
 
     def test_dataloader(self):
         test_data = zarr.open(self.cfg.path.root / self.cfg.path.data.folder / self.cfg.path.data.test_file)
@@ -83,7 +83,7 @@ class HighResWindSpeed(L.LightningDataModule):
             var_list = self.cfg.experiment.dataset.dynamic_variables
         )
 
-        return DataLoader(dataset, batch_size=self.batch_size)
+        return DataLoader(dataset, batch_size=self.batch_size, num_workers=2)
     
     def load_static_features(self, ):
 

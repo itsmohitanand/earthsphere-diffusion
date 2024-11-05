@@ -162,3 +162,7 @@ cython_debug/
 #.idea/
 
 lightning_logs/
+
+# remove log files
+
+*.txt
