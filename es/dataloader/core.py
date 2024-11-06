@@ -51,4 +51,4 @@ class ZarrWindSpeed(Dataset):
 
         x_cond = torch.cat((x_cond, self.static_features), dim=0)
 
-        return x_cond[:, 1:, :], x_tar[:, 1:, :]
+        return x_cond[:, 1:, :], x_tar[:, 1:, :] # to convert 721 x 1440 to 720 x 1440

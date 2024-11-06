@@ -2,13 +2,17 @@ name: ElucidateDiffusion
 optimizer:
   params:
     name: Adam
-    lr: 3e-3
+    lr: 5e-4
     T_max: 500000
-    eta_min: 3e-5
+    eta_min: 5e-6
 model:
-  params:
-    num_sample_steps: 32
+  ElucidateDiffusionParams:
+    num_sample_steps: 64
     self_conditioning: false
+  EMAParams:
+    update_every: 10
+    beta: 0.995 #ema_decay
+
 loss_mask: null
 latitude_weight: null
 variable_weight: null

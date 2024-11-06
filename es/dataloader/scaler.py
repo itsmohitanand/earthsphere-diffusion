@@ -148,6 +148,25 @@ class NormScaler(Scaler):
         
         return norm_data
 
+    def inverse_scale(self, data):
+        """
+        Apply inverse scaling to the given data.
+        Parameters:
+        - data: A torch.Tensor object representing the data to be inverse scaled.
+        Returns:
+        - std: A torch.Tensor object representing the inverse scaled data.
+        Note:
+        - The scaling is performed using the minimum and maximum values stored in self.min_arr and self.max_arr.
+        - The scaled data is normalized between 0 and 1.
+        - To scale the data within a custom interval, uncomment the code block and modify the scaling_interval values.
+        """
+        assert isinstance(self.mean_arr, torch.Tensor)
+        assert isinstance(self.std_arr, torch.Tensor)
+
+        norm_data = data * self.std_arr + self.mean_arr
+
+        return norm_data
+
     def create_min_std_array(self, variable_list):
         """
         Creates min and max arrays for the given list of variables.

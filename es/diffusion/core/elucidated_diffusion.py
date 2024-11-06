@@ -19,7 +19,7 @@ class ElucidateDiffusion(nn.Module):
                     p_sigma=1.2,
                     sigma_min=0.002,
                     sigma_max = 80,
-                    s_churn=80,
+                    s_churn=80, # default was 80
                     s_tmin=0.05,
                     s_tmax=50,
                     s_noise=1.003,
@@ -107,7 +107,7 @@ class ElucidateDiffusion(nn.Module):
         return out
     
     def noise_distribution(self, batch_size, mu, sigma):
-        return mu + sigma * torch.randn((batch_size,), device='cuda')
+        return (mu + sigma * torch.randn((batch_size,), device='cuda')).exp()
     
     def c_skip(self, sigma):
         return (self.sigma_data**2) / (sigma**2 + self.sigma_data**2)

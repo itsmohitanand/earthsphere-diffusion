@@ -27,7 +27,10 @@ diffusion = LElucidateDiffusion(backbone, diffusion_config)
 
 wandb_project =  "test_hrws"
 wandb_entity = "earth-ai"
-wandb_logger = WandbLogger(project=wandb_project, entity=wandb_entity, experiment=None, save_dir="/home/mila/m/mohit.anand/scratch/earthsphere/wandb")
+wandb_logger = WandbLogger(project=wandb_project, 
+                           entity=wandb_entity, 
+                           experiment=None, 
+                           save_dir="/home/mila/m/mohit.anand/scratch/earthsphere/wandb")
 
 
 lr_monitor = LearningRateMonitor(logging_interval='step')
@@ -40,8 +43,9 @@ trainer = Trainer(accelerator="gpu",
                 devices=8, 
                 strategy=strategy, 
                 num_nodes=1, 
-                default_root_dir="/home/mila/m/mohit.anand/scratch/earthsphere/lightning",
-                precision=16)
+                default_root_dir="/home/mila/m/mohit.anand/scratch/earthsphere/lightning/",
+                precision=16, 
+                gradient_clip_val=0.5,)
 if trainer.global_rank == 0:
     wandb_logger.experiment.config.update(config.toDict())
 trainer.fit(model=diffusion, datamodule=dl)
