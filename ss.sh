@@ -8,7 +8,7 @@
 #SBATCH --ntasks-per-node=8
 #SBATCH --nodes=1
 #SBATCH --mem=32G
-#SBATCH --time=23:15:00
+#SBATCH --time=72:15:00
 
 
 # Echo time and hostname into log

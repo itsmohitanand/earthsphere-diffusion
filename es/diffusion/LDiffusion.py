@@ -19,7 +19,11 @@ class LElucidateDiffusion(L.LightningModule):
         self.model = ElucidateDiffusion(backbone = backbone, device="cuda", **self.cfg.model.ElucidateDiffusionParams.toDict())
 
         self.ema = EMA(self.model, **self.cfg.model.EMAParams.toDict())
-
+        
+        self.lat_weight_arr = None
+        if self.cfg.latitude_weight:
+            lat_weight_arr = torch.from_numpy(self.trainer.dl.get_cos_latitude()).to("cuda")
+            self.lat_weight_arr = rearrange(lat_weight_arr, "h w -> 1 1 h w")
 
     def configure_optimizers(self):
         params = self.cfg.optimizer.params.toDict()
@@ -119,8 +123,8 @@ class LElucidateDiffusion(L.LightningModule):
         if self.cfg.loss_mask:
             loss = loss * self.loss_mask
 
-        if self.cfg.latitude_weight:
-            loss = loss * self.latitude_weight
+        if self.lat_weight_arr:
+            loss = loss * self.lat_weight_arr
         
         if self.cfg.variable_weight:
             loss = loss * self.variable_weight

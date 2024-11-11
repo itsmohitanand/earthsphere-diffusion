@@ -87,15 +87,36 @@ class HighResWindSpeed(L.LightningDataModule):
     
     def load_static_features(self, ):
 
-        data_path = Path(self.cfg.path.root) / self.cfg.path.data.folder / self.cfg.path.data.train_file
+        data_path = Path(self.cfg.path.root) / "aux_data" / "aux_variables.zarr"
 
-        lsm = torch.tensor(zarr.open(data_path)["land_sea_mask"][:, :])
+        if not data_path.exists():
+            self.write_static_features()
+            self.load_static_features()
+
+        lsm = xr.open_zarr(data_path)["lsm"].values
 
         assert lsm.shape == (721, 1440)
         
-        
         lsm = rearrange(lsm, "h w -> 1 h w")
         return lsm
+
+    def write_static_features(self, ):
+
+        data_path = Path(self.cfg.path.root) / self.cfg.path.data.folder / self.cfg.path.data.train_file
+        data = xr.open_zarr(data_path)
+
+        lsm = data["land_sea_mask"]
+
+        # Load the latitude apply cosine transform and broadcast to the shape of the land sea mask
+        cos_lat = np.cos(np.deg2rad(data.latitude))
+
+        _, cos_lat = xr.broadcast(data["land_sea_mask"], cos_lat)
+
+        static_data = xr.Dataset({"lsm": lsm, "cos_lat": cos_lat})
+        
+        static_data.to_zarr(Path(self.cfg.path.root) / "aux_data" / "aux_variables.zarr")
+
+        console.print("Static features written", style="info")
 
     def load_scaler(self, ):
         file_name = self.cfg.experiment.dataset.scaler.filename
@@ -171,10 +192,15 @@ class HighResWindSpeed(L.LightningDataModule):
             None
         """
 
-
         assert (
             np.diff(time) == int(temporal_frequency * 24)
         ).sum() == time.shape[0] - 1
         console.print("Temporal check passed", style="info")
 
+    def get_cos_latitude(self,):
+        data_path = Path(self.cfg.path.root) / "aux_data" / "aux_variables.zarr"
+        cos_lat = xr.open_zarr(data_path)["cos_lat"].values
 
+        assert cos_lat.shape == (721, 1440)
+
+        return cos_lat
