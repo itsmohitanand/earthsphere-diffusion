@@ -21,9 +21,11 @@ class LElucidateDiffusion(L.LightningModule):
         self.ema = EMA(self.model, **self.cfg.model.EMAParams.toDict())
         
         self.lat_weight_arr = None
+    
+    def on_fit_start(self):
         if self.cfg.latitude_weight:
-            lat_weight_arr = torch.from_numpy(self.trainer.dl.get_cos_latitude()).to("cuda")
-            self.lat_weight_arr = rearrange(lat_weight_arr, "h w -> 1 1 h w")
+            lat_weight_arr = torch.from_numpy(self.trainer.datamodule.get_cos_latitude()).to("cuda")
+            self.lat_weight_arr = rearrange(lat_weight_arr, "h w -> 1 1 h w")[:, :, 1:, :] # convert 721 x 1440 to 720 x 1440
 
     def configure_optimizers(self):
         params = self.cfg.optimizer.params.toDict()
@@ -66,7 +68,7 @@ class LElucidateDiffusion(L.LightningModule):
 
         loss = self.compute_loss(denoised, x_tar, sigmas)
         
-        if batch_idx % 200 == 0:
+        if batch_idx % 1000 == 0:
             x_pred = self.ema.ema_model.sample(x_conditional=x_cond)
             self.log_images(x_tar, x_pred, "train")
 
@@ -123,7 +125,7 @@ class LElucidateDiffusion(L.LightningModule):
         if self.cfg.loss_mask:
             loss = loss * self.loss_mask
 
-        if self.lat_weight_arr:
+        if self.cfg.latitude_weight:
             loss = loss * self.lat_weight_arr
         
         if self.cfg.variable_weight:

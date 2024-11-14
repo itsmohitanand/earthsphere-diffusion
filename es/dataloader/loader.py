@@ -95,10 +95,11 @@ class HighResWindSpeed(L.LightningDataModule):
 
         lsm = xr.open_zarr(data_path)["lsm"].values
 
-        assert lsm.shape == (721, 1440)
+        assert lsm.shape == (721, 1440) # assert shape (height, width)
         
         lsm = rearrange(lsm, "h w -> 1 h w")
-        return lsm
+
+        return torch.from_numpy(lsm)
 
     def write_static_features(self, ):
 

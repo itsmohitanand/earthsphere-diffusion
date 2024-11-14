@@ -12,6 +12,7 @@ from lightning.pytorch.strategies import DDPStrategy
 
 ## backbone config
 
+on_frontend = False
 
 config = Config(system="Mohit").get_config()
 
@@ -37,10 +38,15 @@ lr_monitor = LearningRateMonitor(logging_interval='step')
 
 strategy = DDPStrategy()
 
+if on_frontend:
+    devices = 1
+else:
+    devices = 8
+
 trainer = Trainer(accelerator="gpu", 
                 logger=wandb_logger, 
                 callbacks=[lr_monitor],
-                devices=8, 
+                devices=devices, 
                 strategy=strategy, 
                 num_nodes=1, 
                 default_root_dir="/home/mila/m/mohit.anand/scratch/earthsphere/lightning/",
